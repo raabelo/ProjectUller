@@ -1,0 +1,83 @@
+keys,en,pt_BR
+VERSION,Uller .beta snapshot 1.0,Uller .beta snapshot 1.0
+COPYRIGHT,©raabelo™ 2021 do not distribute,©raabelo™ 2021 não distribua
+,,
+YES,yes,sim
+NO,no,não
+,,
+MAIN_NEW_GAME,new game,novo jogo
+MAIN_LOAD_GAME,load game,carregar
+MAIN_QUIT,quit,sair
+MAIN_QUIT_SCREEN,"are you really
+going to give up?",vai mesmo desistir?
+,,
+PRE_LANG,language,idioma
+PRE_CONFIRM,confirm,aceitar
+,,
+SETTINGS,settings,configurações
+,,
+TABGENERAL,general,geral
+SETTINGS_AUDIO,audio,audio
+SETTINGS_MUSIC,music,música
+SETTINGS_SOUND,sound fx,efeiros sonoros
+SETTINGS_SCREEN,screen,tela
+SETTINGS_FULLSCREEN,fullscreen,tela cheia
+SETTINGS_LANG,language,idioma
+CLICK_LANG,clique na bandeira,please click on the flag
+,,
+,,
+TABCONTROLS,controls,controles
+,,
+,,
+TABHELP,help,ajuda
+,,
+,,
+SETTINGS_APPLY,apply,confirmar
+SETTINGS_BACK,back,voltar
+,,
+,,
+,,
+,,
+,,
+PAUSE_CONTINUE,continue,continuar
+PAUSE_SAVE,save game,salvar
+PAUSE_LOAD,load game,carregar
+PAUSE_SETTINGS,settings,configurações
+PAUSE_QUIT,quit,sair
+,,
+,,
+,,
+,,
+GAME_SKILL,skill,habilidade
+,,
+SKILL_ARTTEN,dash,avançar
+SKILL_LOCK,adept of the underworld,adepto do submundo
+SKILL_HACHI,,
+SKILL_EMMA,witch apprentice,aprendiz de bruxa
+SKILL_MEVIR,energize,energizar
+SKILL_PLUME,meditate,meditar
+SKILL_IDHI,stolen resources,recursos roubados
+SKILL_HEFENNON,,
+SKILL_DIANA,,
+SKILL_EDWIN,natural caster,conjurador natual
+,,
+SKILL_DESCRIPTION,skill description,descrição da habilidade
+SKILL_ARTTEN_DESC,,
+SKILL_LOCK_DESC,,"como feiticeiro sombrio, lock sacrifica sua vitalidade para cultuar as más divindades em que acredita. 
+ativo: a próxima magia conjurada por lock custará [custo de mana * 5]% de vida ao invés de mana."
+SKILL_HACHI_DESC,,
+SKILL_EMMA_DESC,"as emma is still learning witchcraft, she doesn't know exactly what she's doing.
+active: emma casts a random equiped spell using only [50]% of its original mana cost.","emma ainda está aprendendo a arte da bruxaria e por consequencia disso, ainda não sabe muito bem o que está  fazendo.
+ativo: emma conjura uma magia equipada aleatória por [50]% do custo de mana original."
+SKILL_MEVIR_DESC,,
+SKILL_PLUME_DESC,,"com o tempo que passou no monastério, plume aprendeu que o corpo não é nada mais do que uma extensão da mente.
+ativo: plume para um pouco para meditar e restura [2 * lvl do campeão]% de sua vida e [50]% da mana que gastou.
+passivo: sua luva recebe atributos conforme sua raridade (COLOCAR RARIDADES). plume possui [1] espaço de artefato adicional. entretanto, não possui espaço de arma."
+SKILL_IDHI_DESC,,"durante sua vida como ladrão, idhi roubou diversas armas e agora pode usá-las livremente.
+ativo: ativar a habilidade faz com que idhi troque a arma empunhada para a arma seguinte.
+passivo: idhi possui [4] espaços de arma, utilizando os status apenas da que está empunhando, mas mantendo possiveis habilidades das outras três. entretanto, não possui nenhum espaço de artefato."
+SKILL_HEFENNON_DESC,,
+SKILL_DIANA_DESC,,
+SKILL_EDWIN_DESC,,"toda sua vida na floresta, fez edwin descobrir como usar parte das forças da natureza.
+ativo: edwin conjura a magia que está alocada em sua habilidade.
+passivo: apesar de ter crescido predominantemente como um combatente físico, edwin faz parte do conjunto de classes arcanas. possui [1] espaço de magia adicional (colocado em sua habilidade)."
