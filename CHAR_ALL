@@ -1,0 +1,239 @@
+#extends Node2D
+extends KinematicBody2D
+
+onready var animation = get_node("sprite/animation");
+
+var chao = Vector2(0, 0);
+var pulo = 0;
+
+var state = "idle";
+var direction = "r";
+
+var velocity = Vector2();
+
+var run_speed = CHAR_CONTROL.get_mv_spd();
+var jump_speed = CHAR_CONTROL.get_jp_spd();
+var gravity = 2000;
+
+var jumping = false;
+var attack = false;
+
+func _ready():
+	
+		
+	# ------------- PLAY DEFAULT -----------
+	if CHAR_CONTROL.get_mainChar():
+		animation.set_current_animation("idle");
+	
+	pass
+	
+func _input(event):
+	
+	
+	
+		
+	#------------------------ GENERAL ATK EVENT -----------------
+	if Input.is_action_pressed("char_attack") and state != "attack" and UI_CONTROL.is_busy() != true and CHAR_CONTROL.get_mainChar() != 6:
+		state = "attack";
+		animation.playback_speed = CHAR_CONTROL.get_atk_spd();
+		animation.play("attack");
+	
+	#------------------------ THIEF ATK EVENT -----------------
+	if Input.is_action_pressed("char_attack") and UI_CONTROL.is_busy() != true and CHAR_CONTROL.get_mainChar() == 6:
+		state = "attack";
+		animation.playback_speed = CHAR_CONTROL.get_atk_spd();
+		if CHAR_CONTROL.get_atk_act() == 1:
+			animation.play("attack1");
+		elif CHAR_CONTROL.get_atk_act() == 2:
+			animation.play("attack2");
+		elif CHAR_CONTROL.get_atk_act() == 3:
+			animation.play("attack3");
+		elif CHAR_CONTROL.get_atk_act() == 4:
+			animation.play("attack4");
+			
+	#------------------ GENERAL SKILL EVENT -------------------
+	if Input.is_action_just_pressed("char_skill") and UI_CONTROL.is_busy() != true and CHAR_CONTROL.get_mainChar() != 6 and state != "attack":
+		match CHAR_CONTROL.get_mainChar():
+			0: 
+				animation.play("skill");
+				#dash
+				
+			1: 
+				animation.play("skill");
+				get_node("buff").show();
+				get_node("buff/animation").play("idle");
+				
+			2: 
+				animation.play("skill");
+				#proxima spell causa dano nele mesmo ao inves de gastar mana
+				
+			3: 
+				animation.play("skill");
+				#castar spell aleatoria
+				
+			4: 
+				animation.play("skill");
+				#aumentar dano do proximo atk
+				
+			5: 
+				animation.play("skill");
+				#aumentar vida e mana
+				
+#			6: 
+#				animation.play("skill");
+
+			7: 
+				animation.play("skill");
+				
+			8: 
+				animation.play("skill");
+				
+			9: 
+				animation.play("skill");
+				
+	
+	
+	#------------------ THIEF SKILL EVENT -----------------
+	if Input.is_action_just_pressed("char_skill") and UI_CONTROL.is_busy() != true and CHAR_CONTROL.get_mainChar() == 6 and state != "attack":
+		if CHAR_CONTROL.get_atk_act() == 1 and attack == false: 
+			CHAR_CONTROL.set_atk_act(2);
+			CHAR_CONTROL.set_atk_spd(0.75);
+			attack = true;
+			print (CHAR_CONTROL.get_atk_act());
+		else:
+			if CHAR_CONTROL.get_atk_act() == 2 and attack == false:
+				CHAR_CONTROL.set_atk_act(3);
+				CHAR_CONTROL.set_atk_spd(1.3);
+				attack = true;
+				print (CHAR_CONTROL.get_atk_act());
+			else:
+				if CHAR_CONTROL.get_atk_act() == 3 and attack == false:
+					CHAR_CONTROL.set_atk_act(4);
+					CHAR_CONTROL.set_atk_spd(0.50);
+					attack = true;
+					print (CHAR_CONTROL.get_atk_act());
+				else:
+					if CHAR_CONTROL.get_atk_act() == 4 and attack == false:
+						CHAR_CONTROL.set_atk_act(1);
+						CHAR_CONTROL.set_atk_spd(1.0);
+						attack = true;
+						print (CHAR_CONTROL.get_atk_act());			
+		attack = false;
+				
+	pass
+	
+func get_move_input():
+		
+
+	#------------------ GERNERAL VARIABLES ------------
+	
+	var dir = 0;
+	velocity.x = 0;
+	
+	checkState();
+	
+	#--------------- GENERAL RUN -----------------
+			
+	if Input.is_action_pressed("char_left") and state!= "attack" and UI_CONTROL.is_busy() != true:
+		dir += -1;
+		get_node("sprite").set_flip_h(true);
+		state = "running";
+		velocity.x -= run_speed;
+		if is_on_floor():
+			animation.set_current_animation("run");
+		
+	if Input.is_action_pressed("char_right") and state!= "attack" and UI_CONTROL.is_busy() != true:
+		dir += 1;
+		get_node("sprite").set_flip_h(false);
+		state = "running";
+		velocity.x += run_speed;
+		if is_on_floor():
+			animation.set_current_animation("run");
+	
+	#-------------------- GENERAL MOVE --------------------
+	if state == "running" and is_on_floor():
+		animation.set_current_animation("run");
+
+		
+	#----------------- GENERAL JUMP STATE ------------------
+	if is_on_floor() and UI_CONTROL.is_busy() != true and state != "attack":
+		if Input.is_action_pressed("char_jump"):			
+			jumping = true;
+			print ("jump");
+			velocity.y = jump_speed;
+			chao = get_node(".").get_position();
+			pulo = chao.y + -58;
+			
+
+	
+func _process(delta):
+	
+
+	get_move_input();
+	
+	
+	if !is_on_floor() and state != "attack":
+		print("falling");
+		animation.play("fall");
+	
+	#------------------- ATT JUMP ---------------	
+	velocity.y += gravity * delta;
+	if jumping and is_on_floor():
+        jumping = false;
+	
+	#-------------------- ATT MOVEMENT COLLIDE -------------------------
+	velocity = move_and_slide(velocity, Vector2(0, -1));
+	
+	#-------------------- GENERAL SET IDLE PLAY SPEED ---------------
+	if state != "attack":
+		get_node("sprite/animation").playback_speed = 1;
+	
+	#------------------ GENERAL IDLE START ANIMATION ------------
+	if state != "attack" and state != "running"  and is_on_floor()  and UI_CONTROL.is_busy() != true:
+		animation.set_current_animation("idle");
+		
+	pass
+	
+func checkState():
+	
+	match CHAR_CONTROL.get_mainChar():
+		0:
+			if get_node("sprite").get_frame() == 18 or get_node("sprite").get_frame() == 30 or get_node("sprite").get_frame() == 31 or get_node("sprite").get_frame() == 32 or get_node("sprite").get_frame() == 33 or get_node("sprite").get_frame() == 34 and UI_CONTROL.is_busy() != true:
+				state = "attack";
+			else:
+				state = "idle";	
+		1:
+			if get_node("sprite").get_frame() == 24 or get_node("sprite").get_frame() == 25 or get_node("sprite").get_frame() == 26 or get_node("sprite").get_frame() == 27 or get_node("sprite").get_frame() == 28 or get_node("sprite").get_frame() == 29 or get_node("sprite").get_frame() == 30  or get_node("sprite").get_frame() == 31 or get_node("sprite").get_frame() == 32 or get_node("sprite").get_frame() == 33 or get_node("sprite").get_frame() == 34 or get_node("sprite").get_frame() == 35 or get_node("sprite").get_frame() == 36 or get_node("sprite").get_frame() == 37 or get_node("sprite").get_frame() == 38 and UI_CONTROL.is_busy() != true:
+				state = "attack";
+			else:
+				state = "idle";				
+		2:
+			if get_node("sprite").get_frame() == 24 or get_node("sprite").get_frame() == 25 or get_node("sprite").get_frame() == 26 or get_node("sprite").get_frame() == 27 or get_node("sprite").get_frame() == 28 or get_node("sprite").get_frame() == 29 or get_node("sprite").get_frame() == 30  or get_node("sprite").get_frame() == 31 or get_node("sprite").get_frame() == 32 or get_node("sprite").get_frame() == 33 or get_node("sprite").get_frame() == 34 or get_node("sprite").get_frame() == 35 or get_node("sprite").get_frame() == 36 and UI_CONTROL.is_busy() != true:
+				state = "attack";
+			else:
+				state = "idle";
+		3:
+			if get_node("sprite").get_frame() == 22 or get_node("sprite").get_frame() == 23 or get_node("sprite").get_frame() == 24 or get_node("sprite").get_frame() == 25 or get_node("sprite").get_frame() == 14 or get_node("sprite").get_frame() == 15 or get_node("sprite").get_frame() == 16 or get_node("sprite").get_frame() == 17 or get_node("sprite").get_frame() == 18 and UI_CONTROL.is_busy() != true:
+				state = "attack";
+			else:
+				state = "idle";
+		4:
+			if get_node("sprite").get_frame() == 16 or get_node("sprite").get_frame() == 17 or get_node("sprite").get_frame() == 18 or get_node("sprite").get_frame() == 19 or get_node("sprite").get_frame() == 20 or get_node("sprite").get_frame() == 21 or get_node("sprite").get_frame() == 22 or get_node("sprite").get_frame() == 24 or get_node("sprite").get_frame() == 25 or get_node("sprite").get_frame() == 26 or get_node("sprite").get_frame() == 27 or get_node("sprite").get_frame() == 28 or get_node("sprite").get_frame() == 29 or get_node("sprite").get_frame() == 30 and UI_CONTROL.is_busy() != true:
+				state = "attack";
+			else:
+				state = "idle";
+		5:
+			if get_node("sprite").get_frame() == 199 or get_node("sprite").get_frame() == 200 or get_node("sprite").get_frame() == 201 or get_node("sprite").get_frame() == 202 or get_node("sprite").get_frame() == 203 or get_node("sprite").get_frame() == 204 or get_node("sprite").get_frame() == 205 or get_node("sprite").get_frame() == 206 or get_node("sprite").get_frame() == 207 or get_node("sprite").get_frame() == 208 or get_node("sprite").get_frame() == 209 or get_node("sprite").get_frame() == 210 or get_node("sprite").get_frame() == 211 or get_node("sprite").get_frame() == 212 or get_node("sprite").get_frame() == 213 or get_node("sprite").get_frame() == 214 or get_node("sprite").get_frame() == 150 or get_node("sprite").get_frame() == 151 or get_node("sprite").get_frame() == 152 or get_node("sprite").get_frame() == 153 or get_node("sprite").get_frame() == 154 or get_node("sprite").get_frame() == 155  and UI_CONTROL.is_busy() != true: #or get_node("sprite").get_frame() == 156 or get_node("sprite").get_frame() == 157 or get_node("sprite").get_frame() == 158 or get_node("sprite").get_frame() == 159 or get_node("sprite").get_frame() == 160 or get_node("sprite").get_frame() == 161 or get_node("sprite").get_frame() == 162 or get_node("sprite").get_frame() == 163 or get_node("sprite").get_frame() == 164 or get_node("sprite").get_frame() == 165 or get_node("sprite").get_frame() == 166
+				state = "attack";
+			else:
+				state = "idle";
+				
+		6:
+			if get_node("sprite").get_frame() == 24 or get_node("sprite").get_frame() == 25 or get_node("sprite").get_frame() == 26 or get_node("sprite").get_frame() == 28 or get_node("sprite").get_frame() == 29 or get_node("sprite").get_frame() == 30 or get_node("sprite").get_frame() == 32 or get_node("sprite").get_frame() == 33 or get_node("sprite").get_frame() == 34 or get_node("sprite").get_frame() == 36 or get_node("sprite").get_frame() == 37 or get_node("sprite").get_frame() == 38 and UI_CONTROL.is_busy() != true:
+				state = "attack";
+			else:
+				state = "idle";
+				
+	pass
+
+
